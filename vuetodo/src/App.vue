@@ -25,28 +25,32 @@ export default {
   data () {
     return {
       title: 'Todo App',
-      todos: []
+      todos: [],
+      lastKey:0
     }
   },
   methods:{
     todoAdd:function(todoText) {
-      var todo={ "title" : todoText, "done" : false}
+      this.lastKey = this.lastKey+1;
+      var todo = { "title" : todoText, "done" : false,"key":"key"+this.lastKey}
       this.todos.push(todo)
-      var index= this.todos.length
-      var strTodo=JSON.stringify(todo)
-      localStorage.setItem("key"+index,strTodo)
+      this.setItem(todo)
     },
-    todoDelete:function(index){
-      localStorage.removeItem("key"+index)
-      this.todos.splice(index,1)
+    todoDelete:function(todo){
+      localStorage.removeItem(todo.key)
+      this.todos.splice(this.todos.indexOf(todo),1)
     },
     todoClear:function(){
       this.todos=[]
+      this.lastKey = 0;
       localStorage.clear()
     },
-    todoDone:function(todo,index){
+    todoDone:function(todo){
+      this.setItem(todo)
+    },
+    setItem:function(todo){
       var strTodo=JSON.stringify(todo)
-      localStorage.setItem("key"+index,strTodo)
+      localStorage.setItem(todo.key,strTodo)
     }
   },
   created(){
@@ -56,9 +60,9 @@ export default {
         if(key =="loglevel:webpack-dev-server"){
           continue;
         }
-        var data = localStorage.getItem(key)
-        data =JSON.parse(data)
+        var data = JSON.parse(localStorage.getItem(key))
         this.todos.push(data)
+        this.lastKey =data.key.split("key")[1]
         
       }
     }

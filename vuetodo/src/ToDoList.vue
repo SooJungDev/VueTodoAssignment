@@ -11,11 +11,11 @@
             </v-list-tile-action>
 
             <v-list-tile-content>
-              <v-list-tile-title>{{todo.title}}</v-list-tile-title>
+              <v-list-tile-title v-bind:style="[todo.done ? doneStyle : '']">{{todo.title}}</v-list-tile-title>
             </v-list-tile-content>
             
             <v-list-tile-action>
-             <v-icon color="red" @click="todoDelete(index)">delete</v-icon>
+             <v-icon color="red" @click="todoDelete(todo)">delete</v-icon>
             </v-list-tile-action>
           </v-list-tile>
         </v-list>
@@ -30,20 +30,24 @@ export default {
     },
     data(){
         return{
+            doneStyle:{
+                'text-decoration-line': 'line-through'
+            }
         }
     },
     methods:{
-        todoDelete:function(index){
-            this.$emit("todoDelete",index)
+        todoDelete:function(todo){
+            this.$emit("todoDelete",todo)
         },
-        todoDone(todo,index){
-            this.$emit("todoDone",todo,index)
+        todoDone(todo){
+            this.$emit("todoDone",todo)
         }
     }
 }
 </script>
 
 <style>
+
 
 </style>
 
